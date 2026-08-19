@@ -93,7 +93,7 @@ body.resizing-links {
 
 body.resizing *,
 body.resizing-links * {
-  cursor: inherit !important;
+  cursor: inherit;
 }
 
 button,
@@ -707,8 +707,8 @@ label select {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
   }
 }

@@ -1,12 +1,13 @@
 import esbuild from "esbuild";
 import fs from "fs/promises";
 import process from "process";
-import builtins from "builtin-modules";
+import { builtinModules } from "module";
 import { fileURLToPath } from "url";
 import path from "path";
 
 const production = process.argv[2] === "production";
 const pluginDir = path.dirname(fileURLToPath(import.meta.url));
+const nodeBuiltins = [...builtinModules, ...builtinModules.map((moduleName) => `node:${moduleName}`)];
 const bundledFiles = [
   "vault-web/app.js",
   "vault-web/assets/obsidian-logo.svg",
@@ -57,7 +58,7 @@ await esbuild.build({
     "@lezer/common",
     "@lezer/highlight",
     "@lezer/lr",
-    ...builtins,
+    ...nodeBuiltins,
   ],
   format: "cjs",
   logLevel: "info",

@@ -1,9 +1,9 @@
 {
   "id": "vault-web-launcher",
   "name": "Vault Web",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "minAppVersion": "1.5.0",
-  "description": "Starts the local Vault Web browser editor for this vault.",
-  "author": "Local",
+  "description": "Open and edit your vault in a local browser tab.",
+  "author": "meshokho",
   "isDesktopOnly": true
 }
