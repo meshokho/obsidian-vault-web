@@ -1,0 +1,10 @@
+manifest.json
+main.js
+README.md
+versions.json
+vault-web/app.js
+vault-web/assets/obsidian-logo.svg
+vault-web/index.html
+vault-web/main.js
+vault-web/server.js
+vault-web/styles.css
