@@ -1,4 +1,4 @@
-import { Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, Plugin, PluginSettingTab, requestUrl, Setting, SettingDefinitionItem } from "obsidian";
 import { spawn } from "child_process";
 import * as crypto from "crypto";
 import { shell } from "electron";
@@ -13,7 +13,6 @@ const NODE_CANDIDATES = [
   "C:\\Program Files\\nodejs\\node.exe",
   "C:\\Program Files (x86)\\nodejs\\node.exe",
 ];
-const PLUGIN_DIR = path.join(".obsidian", "plugins", "vault-web-launcher");
 
 interface VaultWebSettings {
   autoStart: boolean;
@@ -38,18 +37,18 @@ export default class VaultWebLauncherPlugin extends Plugin {
     await this.loadSettings();
 
     this.addRibbonIcon("globe", "Open Vault Web", () => {
-      this.startVaultWeb(true);
+      void this.startVaultWeb(true);
     });
 
     this.addCommand({
       id: "start-vault-web",
-      name: "Open Vault Web",
+      name: "Open",
       callback: () => this.startVaultWeb(true),
     });
 
     this.addCommand({
       id: "show-vault-web-status",
-      name: "Show Vault Web status",
+      name: "Show status",
       callback: () => this.showStatus(),
     });
 
@@ -57,14 +56,14 @@ export default class VaultWebLauncherPlugin extends Plugin {
 
     if (this.settings.autoStart) {
       this.app.workspace.onLayoutReady(() => {
-        this.startVaultWeb(this.settings.openOnAutoStart);
+        void this.startVaultWeb(this.settings.openOnAutoStart);
       });
     }
   }
 
   async startVaultWeb(openBrowser: boolean) {
     const vaultRoot = getVaultRoot(this.app.vault.adapter);
-    const pluginDir = path.join(vaultRoot, PLUGIN_DIR);
+    const pluginDir = path.join(vaultRoot, this.app.vault.configDir, "plugins", this.manifest.id);
     const appDir = path.join(pluginDir, "vault-web");
     await this.ensureBundledWebApp(appDir);
     const serverPath = path.join(appDir, "server.js");
@@ -117,7 +116,7 @@ export default class VaultWebLauncherPlugin extends Plugin {
       return;
     }
 
-    if (openBrowser) window.setTimeout(() => shell.openExternal(url), 900);
+    if (openBrowser) window.setTimeout(() => void shell.openExternal(url), 900);
     new Notice(`Vault Web is starting on port ${this.settings.port}`);
   }
 
@@ -128,13 +127,14 @@ export default class VaultWebLauncherPlugin extends Plugin {
 
   async isVaultWebRunning() {
     try {
-      const response = await fetch(`${this.baseUrl()}/api/status`, {
-        cache: "no-store",
+      const response = await requestUrl({
+        url: `${this.baseUrl()}/api/status`,
+        method: "GET",
         headers: {
           "X-Vault-Web-Token": this.settings.token,
         },
       });
-      return response.ok;
+      return response.status >= 200 && response.status < 300;
     } catch {
       return false;
     }
@@ -142,11 +142,15 @@ export default class VaultWebLauncherPlugin extends Plugin {
 
   async loadSettings() {
     const data = await this.loadData();
+    const storedSettings = isSettingsRecord(data) ? data : {};
     this.settings = {
       ...DEFAULT_SETTINGS,
-      ...data,
-      port: normalizePort(data?.port),
-      token: typeof data?.token === "string" && data.token ? data.token : crypto.randomBytes(32).toString("hex"),
+      ...storedSettings,
+      port: normalizePort(storedSettings.port),
+      token:
+        typeof storedSettings.token === "string" && storedSettings.token
+          ? storedSettings.token
+          : crypto.randomBytes(32).toString("hex"),
     };
     await this.saveData(this.settings);
   }
@@ -194,6 +198,10 @@ function normalizePort(value: unknown) {
   return port;
 }
 
+function isSettingsRecord(value: unknown): value is Partial<VaultWebSettings> {
+  return typeof value === "object" && value !== null;
+}
+
 function getVaultRoot(adapter: unknown) {
   const basePath = (adapter as { basePath?: unknown }).basePath;
   if (typeof basePath !== "string" || !basePath) {
@@ -205,9 +213,43 @@ function getVaultRoot(adapter: unknown) {
 class VaultWebSettingTab extends PluginSettingTab {
   plugin: VaultWebLauncherPlugin;
 
-  constructor(app: VaultWebLauncherPlugin["app"], plugin: VaultWebLauncherPlugin) {
+  constructor(app: App, plugin: VaultWebLauncherPlugin) {
     super(app, plugin);
     this.plugin = plugin;
+  }
+
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        type: "group",
+        heading: "Vault Web",
+        items: [
+          {
+            name: "Port",
+            desc: "Local port for Vault Web.",
+          },
+          {
+            name: "Node path",
+            desc: "Optional full path to node.exe. Leave empty to auto-detect.",
+            aliases: ["node.exe"],
+          },
+          {
+            name: "Start server when Obsidian opens",
+            desc: "Starts the local server automatically.",
+            aliases: ["auto start"],
+          },
+          {
+            name: "Open browser after auto-start",
+            desc: "If enabled, auto-start also opens Vault Web in the browser.",
+            aliases: ["browser"],
+          },
+          {
+            name: "Open Vault Web",
+            desc: "Starts the local browser interface.",
+          },
+        ],
+      },
+    ];
   }
 
   display() {
@@ -265,7 +307,7 @@ class VaultWebSettingTab extends PluginSettingTab {
       .setDesc(this.plugin.baseUrl())
       .addButton((button) => {
         button.setButtonText("Open").setCta().onClick(() => {
-          this.plugin.startVaultWeb(true);
+          void this.plugin.startVaultWeb(true);
         });
       });
   }

@@ -1,6 +1,6 @@
 {
   "name": "obsidian-vault-web",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "Obsidian plugin that starts the local Vault Web browser editor.",
   "main": "main.js",
@@ -14,11 +14,10 @@
     "markdown",
     "local-first"
   ],
-  "author": "Local",
+  "author": "meshokho",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "builtin-modules": "^3.3.0",
     "esbuild": "^0.20.2",
     "obsidian": "^1.5.12",
     "typescript": "^5.4.3"
