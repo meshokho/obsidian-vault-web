@@ -1,9 +1,9 @@
 {
-  "id": "vault-web",
+  "id": "vault-web-launcher",
   "name": "Vault Web",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "minAppVersion": "1.5.0",
-  "description": "Open and edit your Obsidian vault in a local browser tab.",
+  "description": "Open and edit your vault in a local browser tab.",
   "author": "meshokho",
   "isDesktopOnly": true
 }

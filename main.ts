@@ -41,13 +41,13 @@ export default class VaultWebLauncherPlugin extends Plugin {
     });
 
     this.addCommand({
-      id: "start-vault-web",
+      id: "start",
       name: "Open",
       callback: () => this.startVaultWeb(true),
     });
 
     this.addCommand({
-      id: "show-vault-web-status",
+      id: "show-status",
       name: "Show status",
       callback: () => this.showStatus(),
     });
@@ -141,7 +141,7 @@ export default class VaultWebLauncherPlugin extends Plugin {
   }
 
   async loadSettings() {
-    const data = await this.loadData();
+    const data: unknown = await this.loadData();
     const storedSettings = isSettingsRecord(data) ? data : {};
     this.settings = {
       ...DEFAULT_SETTINGS,
