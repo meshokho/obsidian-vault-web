@@ -47,7 +47,7 @@ function setSidebarCollapsed(collapsed) {
   document.body.classList.toggle("sidebar-collapsed", collapsed);
   localStorage.setItem("vault-web-sidebar-collapsed", collapsed ? "1" : "0");
   els.toggleSidebar.textContent = collapsed ? "›" : "‹";
-  els.toggleSidebar.title = collapsed ? "Показать список заметок" : "Скрыть список заметок";
+  els.toggleSidebar.title = collapsed ? "Show notes sidebar" : "Hide notes sidebar";
   els.toggleSidebar.setAttribute("aria-label", els.toggleSidebar.title);
 }
 
@@ -55,7 +55,7 @@ function setLinksCollapsed(collapsed) {
   document.body.classList.toggle("links-collapsed", collapsed);
   localStorage.setItem("vault-web-links-collapsed", collapsed ? "1" : "0");
   els.toggleLinks.textContent = collapsed ? "⌃" : "⌄";
-  els.toggleLinks.title = collapsed ? "Показать панель ссылок" : "Скрыть панель ссылок";
+  els.toggleLinks.title = collapsed ? "Show links panel" : "Hide links panel";
   els.toggleLinks.setAttribute("aria-label", els.toggleLinks.title);
 }
 
@@ -66,7 +66,7 @@ function setTheme(theme) {
   localStorage.setItem("vault-web-theme", state.theme);
   const light = state.theme === "light";
   els.themeToggle.textContent = light ? "☀" : "☾";
-  els.themeToggle.title = light ? "Переключиться на темную тему" : "Переключиться на светлую тему";
+  els.themeToggle.title = light ? "Switch to dark theme" : "Switch to light theme";
   els.themeToggle.setAttribute("aria-label", els.themeToggle.title);
 }
 
@@ -247,14 +247,14 @@ function renderLinkList(container, items, emptyText) {
 
 async function loadLinks() {
   if (!state.currentPath) {
-    renderLinkList(els.outgoingLinks, [], "Нет исходящих ссылок");
-    renderLinkList(els.backlinks, [], "Нет обратных ссылок");
+    renderLinkList(els.outgoingLinks, [], "No outgoing links");
+    renderLinkList(els.backlinks, [], "No backlinks");
     return;
   }
   try {
     const links = await request(`/api/links?path=${encodeURIComponent(state.currentPath)}`);
-    renderLinkList(els.outgoingLinks, links.outgoing || [], "Нет исходящих ссылок");
-    renderLinkList(els.backlinks, links.backlinks || [], "Нет обратных ссылок");
+    renderLinkList(els.outgoingLinks, links.outgoing || [], "No outgoing links");
+    renderLinkList(els.backlinks, links.backlinks || [], "No backlinks");
   } catch (error) {
     renderLinkList(els.outgoingLinks, [], error.message);
     renderLinkList(els.backlinks, [], error.message);
@@ -408,7 +408,7 @@ async function renderMermaidBlocks() {
   if (!blocks.length) return;
   if (!window.mermaid) {
     for (const block of blocks) {
-      block.insertAdjacentHTML("beforebegin", '<div class="mermaid-error">Mermaid не загрузился</div>');
+      block.insertAdjacentHTML("beforebegin", '<div class="mermaid-error">Mermaid did not load</div>');
     }
     return;
   }
@@ -439,7 +439,7 @@ function setMode(mode) {
   els.editor.classList.toggle("hidden", preview);
   els.preview.classList.toggle("hidden", !preview);
   els.modeToggle.textContent = preview ? "🕮" : "✎";
-  els.modeToggle.title = preview ? "Переключиться в Edit" : "Переключиться в Preview";
+  els.modeToggle.title = preview ? "Switch to Edit" : "Switch to Preview";
   els.modeToggle.setAttribute("aria-label", els.modeToggle.title);
   els.modeToggle.classList.toggle("active", preview);
   if (preview) {

@@ -17,6 +17,7 @@
     ]
   },
   "include": [
+    "generated-assets.ts",
     "main.ts",
     "types.d.ts"
   ]

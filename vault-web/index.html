@@ -8,14 +8,14 @@
   </head>
   <body>
     <aside class="sidebar">
-      <button id="toggleSidebarButton" class="icon-button small sidebar-toggle" title="Скрыть список заметок" aria-label="Скрыть список заметок">‹</button>
-      <div id="sidebarResizeHandle" class="resize-handle sidebar-resize" role="separator" aria-orientation="vertical" title="Изменить ширину списка заметок"></div>
+      <button id="toggleSidebarButton" class="icon-button small sidebar-toggle" title="Hide notes sidebar" aria-label="Hide notes sidebar">‹</button>
+      <div id="sidebarResizeHandle" class="resize-handle sidebar-resize" role="separator" aria-orientation="vertical" title="Resize notes sidebar"></div>
       <div class="topbar">
-        <button id="newNoteButton" class="icon-button" title="Новая заметка">+</button>
+        <button id="newNoteButton" class="icon-button" title="New note">+</button>
       </div>
-      <input id="searchInput" class="search" placeholder="Поиск по названию или пути" />
+      <input id="searchInput" class="search" placeholder="Search by title or path" />
       <div id="noteList" class="note-list">
-        <div class="status">Загружаю заметки...</div>
+        <div class="status">Loading notes...</div>
       </div>
     </aside>
 
@@ -23,17 +23,17 @@
       <header class="editor-header">
         <div>
           <div class="title-row">
-            <span id="saveStatus" class="save-status saved" title="Сохранено" aria-label="Сохранено"></span>
-            <div id="noteTitle" class="note-title">Выбери заметку</div>
+            <span id="saveStatus" class="save-status saved" title="Saved" aria-label="Saved"></span>
+            <div id="noteTitle" class="note-title">Choose a note</div>
           </div>
-          <div id="notePath" class="note-path">Markdown-файлы из vault</div>
+          <div id="notePath" class="note-path">Markdown files from the vault</div>
         </div>
         <div class="actions">
-          <button id="themeToggleButton" class="icon-button tool" title="Переключить светлую/темную тему" aria-label="Переключить светлую/темную тему">☾</button>
-          <button id="openObsidianButton" class="icon-button tool obsidian-button" title="Открыть текущую заметку в Obsidian" aria-label="Открыть текущую заметку в Obsidian">
+          <button id="themeToggleButton" class="icon-button tool" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">☾</button>
+          <button id="openObsidianButton" class="icon-button tool obsidian-button" title="Open current note in Obsidian" aria-label="Open current note in Obsidian">
             <img src="/assets/obsidian-logo.svg" alt="" />
           </button>
-          <button id="modeToggleButton" class="icon-button tool active" title="Переключить Preview/Edit" aria-label="Переключить Preview/Edit">✎</button>
+          <button id="modeToggleButton" class="icon-button tool active" title="Toggle Preview/Edit" aria-label="Toggle Preview/Edit">✎</button>
         </div>
       </header>
 
@@ -44,8 +44,8 @@
       </section>
 
       <aside class="links-panel">
-        <div id="linksResizeHandle" class="resize-handle links-resize" role="separator" aria-orientation="horizontal" title="Изменить высоту панели ссылок"></div>
-        <button id="toggleLinksButton" class="icon-button small links-toggle" title="Скрыть или показать панель ссылок" aria-label="Скрыть или показать панель ссылок">⌄</button>
+        <div id="linksResizeHandle" class="resize-handle links-resize" role="separator" aria-orientation="horizontal" title="Resize links panel"></div>
+        <button id="toggleLinksButton" class="icon-button small links-toggle" title="Hide or show links panel" aria-label="Hide or show links panel">⌄</button>
         <section>
           <h2>Links</h2>
           <div id="outgoingLinks" class="link-list"></div>
@@ -59,26 +59,26 @@
 
     <dialog id="newNoteDialog">
       <form method="dialog" id="newNoteForm">
-        <h2>Новая заметка</h2>
+        <h2>New note</h2>
         <label>
-          Название
+          Title
           <input id="newNoteTitle" autofocus />
         </label>
         <label>
-          Папка
+          Folder
           <select id="newNoteFolder">
             <option value="Base">Base</option>
-            <option value="">Корень vault</option>
+            <option value="">Vault root</option>
           </select>
         </label>
         <div class="dialog-actions">
-          <button value="cancel">Отмена</button>
-          <button id="createNoteButton" value="default">Создать</button>
+          <button value="cancel">Cancel</button>
+          <button id="createNoteButton" value="default">Create</button>
         </div>
       </form>
     </dialog>
 
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="/vendor/mermaid.min.js"></script>
     <script defer src="/main.js"></script>
   </body>
 </html>
