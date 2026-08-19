@@ -71,7 +71,7 @@ export default class VaultWebLauncherPlugin extends Plugin {
 
     if (await this.isVaultWebRunning()) {
       if (openBrowser) await shell.openExternal(url);
-      new Notice("Vault Web уже запущен");
+      new Notice("Vault Web is already running");
       return;
     }
 
@@ -111,17 +111,17 @@ export default class VaultWebLauncherPlugin extends Plugin {
     fs.closeSync(out);
 
     if (!started) {
-      new Notice("Vault Web не смог найти node.exe");
+      new Notice("Vault Web could not find node.exe");
       return;
     }
 
     if (openBrowser) window.setTimeout(() => shell.openExternal(url), 900);
-    new Notice(`Vault Web запускается на порту ${this.settings.port}`);
+    new Notice(`Vault Web is starting on port ${this.settings.port}`);
   }
 
   async showStatus() {
     const running = await this.isVaultWebRunning();
-    new Notice(running ? `Vault Web запущен: ${this.baseUrl()}` : "Vault Web сейчас не отвечает");
+    new Notice(running ? `Vault Web is running: ${this.baseUrl()}` : "Vault Web is not responding");
   }
 
   async isVaultWebRunning() {
