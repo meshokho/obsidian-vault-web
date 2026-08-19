@@ -58,3 +58,7 @@ npm run build
 ## Release Payload
 
 Files listed in `release-files.txt` are the minimal install payload. Do not ship `node_modules`, `data.json`, or `vault-web/launcher.log`.
+
+For Obsidian releases, use a tag that exactly matches the plugin version, for example `0.5.0`. Do not prefix the tag with `v`.
+
+Vault Web bundles its browser app into `main.js` and restores it into the plugin folder at runtime. Mermaid is shipped from the bundled `vault-web/vendor/mermaid.min.js`; the browser app does not load Mermaid from a CDN.

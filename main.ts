@@ -4,6 +4,7 @@ import * as crypto from "crypto";
 import { shell } from "electron";
 import * as fs from "fs";
 import * as path from "path";
+import { BUNDLED_WEB_APP_FILES } from "./generated-assets";
 
 const HOST = "127.0.0.1";
 const DEFAULT_PORT = 4177;
@@ -65,6 +66,7 @@ export default class VaultWebLauncherPlugin extends Plugin {
     const vaultRoot = getVaultRoot(this.app.vault.adapter);
     const pluginDir = path.join(vaultRoot, PLUGIN_DIR);
     const appDir = path.join(pluginDir, "vault-web");
+    await this.ensureBundledWebApp(appDir);
     const serverPath = path.join(appDir, "server.js");
     const logPath = path.join(appDir, "launcher.log");
     const url = this.urlWithToken();
@@ -165,6 +167,24 @@ export default class VaultWebLauncherPlugin extends Plugin {
   nodeCandidates() {
     const custom = this.settings.nodePath.trim();
     return custom ? [custom, ...NODE_CANDIDATES] : NODE_CANDIDATES;
+  }
+
+  async ensureBundledWebApp(appDir: string) {
+    for (const file of BUNDLED_WEB_APP_FILES) {
+      const relativePath = file.path.replace(/^vault-web\//, "");
+      const target = path.join(appDir, relativePath);
+      const data = Buffer.from(file.base64, "base64");
+      await fs.promises.mkdir(path.dirname(target), { recursive: true });
+
+      try {
+        const current = await fs.promises.readFile(target);
+        if (current.equals(data)) continue;
+      } catch {
+        // Missing files are restored from the bundled plugin assets.
+      }
+
+      await fs.promises.writeFile(target, data);
+    }
   }
 }
 

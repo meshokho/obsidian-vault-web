@@ -3,8 +3,7 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 
-const VAULT_ROOT =
-  process.env.VAULT_ROOT || "C:\\Users\\Миша\\Мой диск\\Zettelkasten";
+const VAULT_ROOT = process.env.VAULT_ROOT || process.cwd();
 const PORT = Number(process.env.PORT || 4177);
 const HOST = "127.0.0.1";
 const APP_DIR = __dirname;
@@ -32,7 +31,7 @@ function send(res, status, body, type = "application/json; charset=utf-8") {
     "Cache-Control": "no-store",
     "Content-Length": length,
     "Content-Security-Policy":
-      "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'",
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'",
     "X-Content-Type-Options": "nosniff",
   });
   res.end(payload);
@@ -224,7 +223,7 @@ async function api(req, res, url) {
       "---",
       "type: concept-note",
       "inbox_status:",
-      "  - Входящие",
+      "  - Inbox",
       "---",
       "",
       `# ${rawTitle}`,
